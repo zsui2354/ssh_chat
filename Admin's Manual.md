@@ -1,44 +1,44 @@
-# Devzat Admin's Manual
+# Devzat 管理员手册
 
-This document is for those who want to manage a self-hosted Devzat server.
+本文档适用于希望管理自托管 Devzat 服务器的用户。
 
-Feel free to make a [new issue](https://github.com/quackduck/devzat/issues) if something doesn't work.
+随意制作一个 [new issue](https://github.com/quackduck/devzat/issues) 如果有什么东西不管用。
 
 ## Installation
 ```shell
 git clone https://github.com/quackduck/devzat
 cd devzat
 ```
-To compile Devzat, you will need Go installed with a minimum version of 1.17.
+要编译 Devzat，您需要安装最低版本为 1.17 的 Go。
 
-Now run `go install` to install the Devzat binary globally, or run `go build` to build and keep the binary in the working directory.
+现在运行 'go install' 来全局安装 Devzat 二进制文件，或者运行 'go build' 来构建二进制文件并将其保存在工作目录中。
 
-You may need to generate a new key pair for your server using the `ssh-keygen` command. When prompted, save as `devzat-sshkey` since this is the default location (it can be changed in the config).
-While you can use the same key pair that your user account has, it is recommended to use a new key pair.
+您可能需要使用 'ssh-keygen' 命令为您的服务器生成新的密钥对。出现提示时，另存为 'devzat-sshkey'，因为这是默认位置（可以在配置中更改）。
+虽然您可以使用与用户账户相同的密钥对，但建议使用新的密钥对。
 
-## Usage
+## 用法
 
 ```shell
 ./devzat # use without "./" for a global binary
 ```
 
-Devzat listens on port 2221 for new SSH connections by default. Users can now join using `ssh -p 2221 <server-hostname>`.
+默认情况下，Devzat 在端口 2221 上侦听新的 SSH 连接。用户现在可以使用 `ssh -p 2221 <server-hostname>`.
 
-Set the environment variable `PORT` to a different port number or edit your config to change what port Devzat listens for SSH connections on. Users would then run `ssh -p <port> <server-hostname>` to join.
+将环境变量 'PORT' 设置为不同的端口号，或编辑您的配置以更改 Devzat 侦听 SSH 连接的端口。然后，用户将运行 'ssh -p <port> <server-hostname>' 加入。
 
-## Configuration
+## 配置
 
-Devzat writes the default config file if one isn't found, so you do not need to make one before using Devzat. 
+如果找不到默认配置文件，Devzat 会写入默认配置文件，因此在使用 Devzat 之前无需创建配置文件。
 
-The default location Devzat looks for a config file is `devzat.yml` in the current directory. Alternatively, it uses the path set in the `DEVZAT_CONFIG` environment variable.
+Devzat 在当前目录中查找配置文件的默认位置是 'devzat.yml' 。或者，它使用 'DEVZAT_CONFIG' 环境变量中设置的路径。
 
-An example config file:
+An example config file:示例配置文件：
 ```yaml
-# what port to host a server on ($PORT overrides this)
+# what port to host a server on ($PORT overrides this)   在哪个端口上托管服务器（$PORT 会覆盖此设置）
 port: 2221
-# an alternate port to avoid firewalls
+# an alternate port to avoid firewalls                   避免防火墙的备用端口
 alt_port: 443
-# what port to host profiling on (unimportant)
+# what port to host profiling on (unimportant)           在哪个端口上托管分析 （不重要）
 profile_port: 5555
 # where to store data such as bans and logs
 data_dir: devzat-data
@@ -48,15 +48,15 @@ key_file: devzat-sshkey
 integration_config: devzat-integrations.yml
 # whether to censor messages (optional)
 censor: true
-# a list of admin IDs and notes about them
+# a list of admin IDs and notes about them   管理员 ID 列表和有关它们的注释
 admins:
   d6acd2f5c5a8ef95563883032ef0b7c0239129b2d3672f964e5711b5016e05f5: 'Arkaeriit: github.com/Arkaeriit'
   ff7d1586cdecb9fbd9fcd4c9548522493c29172bc3121d746c83b28993bd723e: 'Ishan Goel: quackduck'
 ```
 
-### Using admin power
+### 使用管理员权限
 
-As an admin, you can ban, unban and kick users. When logged into the chat, you can run commands like these:
+作为管理员，您可以禁止、取消禁止和踢出用户。登录聊天后，您可以运行如下命令：
 ```shell
 ban <user>
 ban <user> 1h10m
@@ -64,11 +64,11 @@ unban <user ID or IP>
 kick <user>
 ```
 
-If running these commands makes Devbot complain about authorization, you need to add your ID under the `admins` key in your config file (`devzat-config.yml` by default).
+如果运行这些命令使 Devbot 抱怨授权，您需要在配置文件的 'admins' 键下添加您的 ID（默认为 'devzat-config.yml）。
 
-### Enabling a user allowlist
+### 启用用户白名单
 
-Devzat can use be used as a private chatroom. Add this to your config:
+Devzat 可以用作私人聊天室。将以下内容添加到您的配置中：
 
 ```yaml
 private: true # enable allowlist checking
@@ -77,28 +77,28 @@ allowlist:
   ...
 ```
 
-The `allowlist` has the same format as the `admins` list. Add the IDs of the allowed users and info about that user (this is to make IDs easier to identify when editing the config file, and isn't used by Devzat)
+“允许列表”的格式与“管理员”列表的格式相同。添加允许的用户的 ID 和有关该用户的信息（这是为了在编辑配置文件时更容易识别 ID，并且 Devzat 不会使用它）
 
-All admins are allowed even if their ID is not in the allowlist. So, if everyone on the private server is an admin, an allowlist isn't necessary, just enable private mode.
+允许所有管理员，即使他们的 ID 不在允许列表中。因此，如果私人服务器上的每个人都是管理员，则不需要白名单，只需启用私人模式即可。
 
-Message backlog on `#main` is disabled in private chats. Only those logged in at the same time as you can read your messages.
+在私聊中，“#main”上的消息积压处于禁用状态。只有与您同时登录的人才能阅读您的消息。
 
-### Enabling integrations
+### 启用集成
 
-Devzat includes features that may not be needed by self-hosted instances. These are called integrations.
+Devzat 包含自托管实例可能不需要的功能。这些称为集成。
 
-You can enable these integrations by setting the `integration_config` in your config file to some path:
+您可以通过将配置文件中的 'integration_config' 设置为某个路径来启用这些集成：
 
 ```yaml
 integration_config: devzat-integrations.yml
 ```
-Now make a new file at that path. This is your integration config file.
+现在在该路径处创建一个新文件。这是您的集成配置文件。
 
-#### Using the Slack integration
+#### 使用 Slack 集成
 
-Devzat supports a bridge to Slack. You'll need a Slack bot token so Devzat can post to and receive messages from Slack. Follow the guide [here](https://api.slack.com/authentication/basics) to get your token and add a Slack app to your workspace. Ensure it has read and write scopes.
+Devzat 支持通往 Slack 的桥梁。您需要一个 Slack 机器人令牌，以便 Devzat 可以向 Slack 发布消息并从 Slack 接收消息。按照指南 [here]（https://api.slack.com/authentication/basics） 获取您的令牌并添加a Slack app to your workspace. 确保它具有读取和写入范围。
 
-Add your bot token to your integration config file. The `prefix` key defines what messages from Slack rendered in Devzat will be prefixed with. Find the channel ID of the channel you want to bridge to with a right-click on it in Slack.
+将您的机器人令牌添加到您的集成配置文件中。'prefix' 键定义在 Devzat 中呈现的 Slack 消息的前缀。在 Slack 中右键单击要桥接到的频道的频道 ID，找到该频道的频道 ID。
 
 ```yaml
 slack:
@@ -107,11 +107,11 @@ slack:
     prefix: Slack
 ```
 
-#### Using the Discord integration
+#### 使用 Discord 集成
 
-Devzat supports a bridge to Discord. You'll need a Discord bot token so Devzat can post to and receive messages from Discord. Follow the guide [here](https://www.writebots.com/discord-bot-token) to set up your bot and ensure it will have the "Send Messages", "Read Message History", and "Manage Webhooks" permissions.
+Devzat 支持通往 Discord 的桥梁。您需要一个 Discord 机器人令牌，以便 Devzat 可以在 Discord 上发帖和接收来自该消息的消息。按照指南 [here]（https://www.writebots.com/discord-bot-token） 设置您的机器人，并确保它具有“发送消息”、“阅读消息历史记录”和“管理 Webhooks”权限。
 
-Add your bot token to your integration config file. The `prefix` key defines what messages from Discord rendered in Devzat will be prefixed with. Find the channel ID of the channel you want to bridge to with a right-click on it.
+将您的机器人令牌添加到您的集成配置文件中。'prefix' 键定义了在 Devzat 中呈现的 Discord 消息的前缀。右键单击要桥接到的通道的通道 ID。
 
 ```yaml
 discord:
@@ -121,10 +121,10 @@ discord:
     compact_mode: true # optional: disables avatars so messages take up less vertical space
 ```
 
-#### Using the Twitter integration
-Devzat supports posting updates about who is online to Twitter. Start by creating a new app through a [Twitter developer account](https://developer.twitter.com/en/apply/user) (note: Twitter's API is now paid).
+#### 使用 Twitter 集成
+Devzat 支持在 Twitter 上发布有关谁在线的更新。首先通过 [Twitter 开发者帐户]（https://developer.twitter.com/en/apply/user） 创建一个新应用程序（注意：Twitter 的 API 现在是付费的）。
 
-Now add in the relevant keys to your integration config file:
+现在，将相关键添加到您的集成配置文件中：
 ```yaml
 twitter:
     consumer_key: XXXXXXXXXXXXXXXXXXXXXXXXX
@@ -133,28 +133,28 @@ twitter:
     access_token_secret: XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
 ```
 
-### Using the plugin API integration
+### 使用插件 API 集成
 
-Devzat includes a built-in gRPC plugin API. This is useful for building your own integration or using a third-party one.
+Devzat 包括一个内置的 gRPC 插件 API。这对于构建您自己的集成或使用第三方集成非常有用。
 
-Documentation for using the gRPC API is available [here](plugin/README.md). This integration stores API tokens inside the data directory.
+有关使用 gRPC API 的文档，请参见 [此处](plugin/README.md)。此集成将 API 令牌存储在数据目录中。
 
 ```yaml
 rpc:
     port: 5556 # port to listen on for gRPC clients
 ```
 
-Use the token issuing commands detailed in the [plugin documentation](plugin/README.md) to allow clients to authenticate.
+使用 API 中的 [plugin documentation](plugin/README.md) 以允许客户端进行身份验证。
 
-You may also hard-code a key that can be used as an authentication token, but this is not recommended. This option can be useful for server owners trying to keep some API clients always online, since this key cannot be revoked by admins (unlike tokens).
+您还可以对可用作身份验证令牌的密钥进行硬编码，但不建议这样做。对于试图使某些 API 客户端始终在线的服务器所有者来说，此选项可能很有用，因为管理员无法撤销此密钥（与令牌不同）。
 
 ```yaml
     key: "some string" # a string that gRPC clients authenticate with (optional)
 ```
 
-You can use any number of integrations together.
+您可以同时使用任意数量的集成。
 
-There are 4 environment variables you can set to quickly disable integrations on the command line:
+您可以设置 4 个环境变量以在命令行上快速禁用集成：
 * `DEVZAT_OFFLINE_TWITTER=true` will disable Twitter
 * `DEVZAT_OFFLINE_SLACK=true` will disable Slack
 * `DEVZAT_OFFLINE_RPC=true` will disable the gRPC server

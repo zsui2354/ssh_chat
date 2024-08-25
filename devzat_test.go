@@ -97,7 +97,7 @@ func TestFindMention(t *testing.T) {
 /* ---------------------- Testing speed of findMention ---------------------- */
 
 var (
-	noMention      = strings.Repeat("This is a message with no mentions.", 100)
+	noMention      = strings.Repeat("这是一条没有提及的消息.", 100)
 	compactMention = "@timt @timt @tom @timt."
 	longMention    = strings.Repeat(" @timt", 100)
 	escapedMention = strings.Repeat(" \\@timt", 100)
@@ -176,9 +176,9 @@ func performTestBan(t *testing.T, id0 string, id1 string, id2 string, id3 string
 	r.users[1].id = id1
 	r.users[2].id = id2
 	r.users[3].id = id3
-	r.users[0].ban("Tim is a meany")
+	r.users[0].ban("Tim是个坏蛋")
 	if len(r.users) != 4-usersBanned {
-		t.Log("Error,", usersBanned, "users should have been kicked but", 4-len(r.users), "have been kicked.")
+		t.Log("Error,", usersBanned, "用户应该被踢出，", 4-len(r.users), "已被踢出.")
 		t.Fail()
 	}
 }

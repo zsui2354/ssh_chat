@@ -28,12 +28,12 @@ import (
 var (
 	PluginCMDs = map[string]PluginCMD{}
 	RPCCMDs    = []CMD{
-		{"plugins", pluginsCMD, "", "List plugin commands"},
+		{"plugins", pluginsCMD, "", "列出插件命令"},
 	}
 	RPCCMDsRest = []CMD{
-		{"lstokens", lsTokensCMD, "", "List plugin token hashes and their data (admin)"},
-		{"revoke", revokeTokenCMD, "<token hash>", "Revoke a plugin token (admin)"},
-		{"grant", grantTokenCMD, "[user] [data]", "Grant a token and optionally send it to a user (admin)"},
+		{"lstokens", lsTokensCMD, "", "列出插件令牌哈希值及其数据(admin)"},
+		{"revoke", revokeTokenCMD, "<token hash>", "撤销插件令牌 (admin)"},
+		{"grant", grantTokenCMD, "[user] [data]", "授予令牌并选择性地将其发送给用户 (admin)"},
 	}
 	ListenersNonMiddleware = make([]chan pb.MiddlewareChannelMessage, 0, 4)
 	ListenersMiddleware    = make([]chan pb.MiddlewareChannelMessage, 0, 4)
@@ -47,7 +47,7 @@ type pluginServer struct {
 
 func (s *pluginServer) RegisterListener(stream pb.Plugin_RegisterListenerServer) error {
 	s.lock.Lock()
-	Log.Println("[gRPC] Registering event listener")
+	Log.Println("[gRPC] 注册事件侦听器")
 	initialData, err := stream.Recv()
 	if err == io.EOF {
 		return nil
@@ -58,7 +58,7 @@ func (s *pluginServer) RegisterListener(stream pb.Plugin_RegisterListenerServer)
 
 	listener := initialData.GetListener()
 	if listener == nil {
-		return status.Error(codes.InvalidArgument, "First message must be a listener")
+		return status.Error(codes.InvalidArgument, "第一条消息必须是侦听器")
 	}
 
 	isMiddleware := listener.Middleware != nil && *listener.Middleware
@@ -68,7 +68,7 @@ func (s *pluginServer) RegisterListener(stream pb.Plugin_RegisterListenerServer)
 	if listener.Regex != nil {
 		regex, err = regexp.Compile(*listener.Regex)
 		if err != nil {
-			return status.Error(codes.InvalidArgument, "Invalid regex")
+			return status.Error(codes.InvalidArgument, "无效的正则表达式")
 		}
 	}
 
@@ -131,7 +131,7 @@ func (s *pluginServer) RegisterListener(stream pb.Plugin_RegisterListenerServer)
 			switch data := mwRes.Data.(type) {
 			case *pb.ListenerClientData_Listener:
 				sendNilResponse()
-				return status.Error(codes.InvalidArgument, "Middleware returned a listener instead of a response")
+				return status.Error(codes.InvalidArgument, "Middleware 返回了一个侦听器而不是响应")
 			case *pb.ListenerClientData_Response:
 				c <- data
 			}
@@ -152,7 +152,7 @@ type PluginCMD struct {
 
 func (s *pluginServer) RegisterCmd(def *pb.CmdDef, stream pb.Plugin_RegisterCmdServer) error {
 	s.lock.Lock()
-	Log.Print("[gRPC] Registering command with name " + def.Name)
+	Log.Print("[gRPC] 使用 name 注册命令 " + def.Name)
 	PluginCMDs[def.Name] = PluginCMD{
 		argsInfo:       def.ArgsInfo,
 		info:           def.Info,
@@ -174,13 +174,13 @@ func (s *pluginServer) SendMessage(ctx context.Context, msg *pb.Message) (*pb.Me
 	if msg.GetEphemeralTo() != "" {
 		u, success := findUserByName(Rooms[msg.Room], *msg.EphemeralTo)
 		if !success {
-			return nil, status.Error(codes.NotFound, "Could not find user "+*msg.EphemeralTo)
+			return nil, status.Error(codes.NotFound, "找不到用户 "+*msg.EphemeralTo)
 		}
 		u.writeln(msg.GetFrom()+" -> ", msg.Msg)
 	} else {
 		r := Rooms[msg.Room]
 		if r == nil {
-			return nil, status.Error(codes.InvalidArgument, "Room does not exist")
+			return nil, status.Error(codes.InvalidArgument, "房间不存在")
 		}
 		r.broadcast(msg.GetFrom(), msg.Msg)
 	}
@@ -190,21 +190,21 @@ func (s *pluginServer) SendMessage(ctx context.Context, msg *pb.Message) (*pb.Me
 func authorize(ctx context.Context) error {
 	md, ok := metadata.FromIncomingContext(ctx)
 	if !ok {
-		return status.Error(codes.Unauthenticated, "Missing metadata")
+		return status.Error(codes.Unauthenticated, "缺少元数据")
 	}
 
-	values := md["authorization"]
+	values := md["授权"]
 	if len(values) == 0 {
-		return status.Error(codes.Unauthenticated, "Missing authorization header")
+		return status.Error(codes.Unauthenticated, "缺少授权标头")
 	}
 
-	token := strings.TrimPrefix(values[0], "Bearer ")
+	token := strings.TrimPrefix(values[0], "承载 ")
 
 	if Integrations.RPC.Key != "" && token == Integrations.RPC.Key {
 		return nil
 	}
 	if _, ok = Tokens[token]; !ok {
-		return status.Error(codes.Unauthenticated, "Invalid authorization header")
+		return status.Error(codes.Unauthenticated, "无效的授权标头")
 	}
 	return nil
 }
@@ -219,7 +219,7 @@ func rpcInit() {
 	go func() {
 		lis, err := net.Listen("tcp", fmt.Sprintf(":%d", Integrations.RPC.Port))
 		if err != nil {
-			Log.Println("[gRPC] Failed to listen for plugin server:", err)
+			Log.Println("[gRPC] 无法侦听插件服务器:", err)
 			return
 		}
 		// TODO: add TLS if configured
@@ -239,9 +239,9 @@ func rpcInit() {
 			grpc.KeepaliveParams(keepalive.ServerParameters{Time: time.Second * 10}),
 		)
 		pb.RegisterPluginServer(grpcServer, &pluginServer{})
-		Log.Printf("[gRPC] Plugin server started on port %d\n", Integrations.RPC.Port)
+		Log.Printf("[gRPC] 插件服务器已在端口上启动 %d\n", Integrations.RPC.Port)
 		if err = grpcServer.Serve(lis); err != nil {
-			Log.Println("[gRPC] Failed to serve:", err)
+			Log.Println("[gRPC] 服务失败:", err)
 		}
 	}()
 }
@@ -305,23 +305,23 @@ func pluginsCMD(_ string, u *User) {
 	}
 	autogenerated := autogenCommands(plugins)
 	if autogenerated == "" {
-		autogenerated = "   (no plugin commands are loaded)"
+		autogenerated = "   (未加载任何插件命令)"
 	}
-	u.room.broadcast("", "Plugin commands  \n"+autogenerated)
+	u.room.broadcast("", "插件命令  \n"+autogenerated)
 }
 
 func initTokens() {
 	f, err := os.Open(Config.DataDir + string(os.PathSeparator) + "tokens.json")
 	if err != nil {
 		if !os.IsNotExist(err) {
-			Log.Println("Error reading tokens file:", err)
+			Log.Println("读取令牌文件时出错:", err)
 		}
 		return
 	}
 	defer f.Close()
 	j, err := io.ReadAll(f)
 	if err != nil {
-		Log.Println("Error reading tokens file:", err)
+		Log.Println("读取令牌文件时出错:", err)
 		return
 	}
 
@@ -333,10 +333,10 @@ func initTokens() {
 		}
 		err = json.Unmarshal(j, &s)
 		if err != nil {
-			Log.Println("Error decoding tokens file:", err)
+			Log.Println("解码令牌文件时出错:", err)
 			return
 		}
-		Log.Println("Changing token file format")
+		Log.Println("更改令牌文件格式")
 		for i := range s {
 			Tokens[s[i].Token] = s[i].Data
 		}
@@ -353,22 +353,22 @@ func saveTokens() {
 	defer f.Close()
 	data, err := json.Marshal(Tokens)
 	if err != nil {
-		Log.Println("Error encoding tokens file:", err)
+		Log.Println("对令牌文件进行编码时出错:", err)
 	}
 	_, err = f.Write(data)
 	if err != nil {
-		Log.Println("Error writing tokens file:", err)
+		Log.Println("写入令牌文件时出错:", err)
 	}
 }
 
 func lsTokensCMD(_ string, u *User) {
 	if !auth(u) {
-		u.room.broadcast(Devbot, "Not authorized")
+		u.room.broadcast(Devbot, "未授权")
 		return
 	}
 
 	if len(Tokens) == 0 {
-		u.room.broadcast(Devbot, "No tokens found.")
+		u.room.broadcast(Devbot, "未授权.")
 		return
 	}
 	msg := "Tokens:  \n"
@@ -383,34 +383,34 @@ func lsTokensCMD(_ string, u *User) {
 
 func revokeTokenCMD(rest string, u *User) {
 	if !auth(u) {
-		u.room.broadcast(Devbot, "Not authorized")
+		u.room.broadcast(Devbot, "未授权")
 		return
 	}
 
 	if len(rest) == 0 {
-		u.room.broadcast(Devbot, "Please provide a sha256 hash of a token to revoke.")
+		u.room.broadcast(Devbot, "请提供要撤销的令牌的 sha256 哈希值.")
 		return
 	}
 	for token := range Tokens {
 		if shasum(token) == rest {
 			delete(Tokens, token)
 			saveTokens()
-			u.room.broadcast(Devbot, "Token revoked!")
+			u.room.broadcast(Devbot, "令牌已撤销!")
 			return
 		}
 	}
-	u.room.broadcast(Devbot, "Token not found.")
+	u.room.broadcast(Devbot, "找不到令牌.")
 }
 
 func grantTokenCMD(rest string, u *User) {
 	if !auth(u) {
-		u.room.broadcast(Devbot, "Not authorized")
+		u.room.broadcast(Devbot, "未授权")
 		return
 	}
 
 	token, err := generateToken()
 	if err != nil {
-		u.room.broadcast(Devbot, "Error generating token: "+err.Error())
+		u.room.broadcast(Devbot, "生成令牌时出错: "+err.Error())
 		Log.Println(err)
 		return
 	}
@@ -419,14 +419,14 @@ func grantTokenCMD(rest string, u *User) {
 	if len(split) > 0 && len(split[0]) > 0 && split[0][0] == '@' {
 		toUser, ok := findUserByName(u.room, split[0][1:])
 		if ok {
-			toUser.writeln(Devbot, "You have been granted a token: "+token)
+			toUser.writeln(Devbot, "您已获得令牌: "+token)
 		} else {
-			u.room.broadcast(Devbot, "Who's that?")
+			u.room.broadcast(Devbot, "那是谁?")
 			return
 		}
 	}
 	Tokens[token] = rest
-	u.writeln(Devbot, "Granted token: "+token)
+	u.writeln(Devbot, "已授予的令牌: "+token)
 	saveTokens()
 }
 

@@ -106,7 +106,7 @@ func init() {
 	var d []byte
 	if _, err := os.Stat(cfgFile); err != nil {
 		if os.IsNotExist(err) {
-			fmt.Println("Config file not found, so using the default one and writing it to " + cfgFile)
+			fmt.Println("配置文件未找到，因此使用默认配置文件并将其写入 " + cfgFile)
 
 			d, err = yaml.Marshal(Config)
 			errCheck(err)
@@ -118,7 +118,7 @@ func init() {
 		errCheck(err)
 		err = yaml.UnmarshalStrict(d, &Config)
 		errCheck(err)
-		fmt.Println("Config loaded from " + cfgFile)
+		fmt.Println("Config 加载自 " + cfgFile)
 	}
 
 	err := os.MkdirAll(Config.DataDir, 0755)
@@ -146,7 +146,7 @@ func init() {
 				Integrations.Slack.Prefix = "Slack"
 			}
 			if sl := Integrations.Slack; sl.Token == "" || sl.ChannelID == "" {
-				fmt.Println("error: Slack token or channel ID is missing")
+				fmt.Println("error: 缺少 Slack 令牌或频道 ID")
 				os.Exit(0)
 			}
 		}
@@ -155,7 +155,7 @@ func init() {
 				Integrations.Discord.Prefix = "Discord"
 			}
 			if sl := Integrations.Discord; sl.Token == "" || sl.ChannelID == "" {
-				fmt.Println("error: Discord token or channel ID is missing")
+				fmt.Println("error: 缺少 Discord 令牌或频道 ID")
 				os.Exit(0)
 			}
 		}
@@ -164,12 +164,12 @@ func init() {
 				tw.AccessTokenSecret == "" ||
 				tw.ConsumerKey == "" ||
 				tw.ConsumerSecret == "" {
-				fmt.Println("error: Twitter credentials are incomplete")
+				fmt.Println("error: Twitter 认证不完整")
 				os.Exit(0)
 			}
 		}
 
-		fmt.Println("Integration config loaded from " + Config.IntegrationConfig)
+		fmt.Println("集成配置从 " + Config.IntegrationConfig)
 
 		if os.Getenv("DEVZAT_OFFLINE_SLACK") != "" {
 			fmt.Println("Disabling Slack")

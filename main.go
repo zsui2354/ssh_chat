@@ -132,15 +132,15 @@ func main() {
 	signal.Notify(c, os.Interrupt, syscall.SIGTERM, syscall.SIGHUP)
 	go func() {
 		<-c
-		fmt.Println("Shutting down...")
+		fmt.Println("关闭...")
 		saveBans()
 		time.AfterFunc(time.Second, func() {
-			Log.Println("Broadcast taking too long, exiting server early.")
+			Log.Println("广播时间过长，提前退出服务器。")
 			os.Exit(4)
 		})
 		for _, r := range Rooms {
-			r.broadcast(Devbot, "Server going down! This is probably because it is being updated. Try joining back immediately.  \n"+
-				"If you still can't join, try joining back in 2 minutes. If you _still_ can't join, make an issue at github.com/quackduck/devzat/issues")
+			r.broadcast(Devbot, "服务器宕机！这可能是因为它正在更新。请尝试立即重新加入。 \n"+
+				"如果您仍然无法加入，请尝试在 2 分钟后重新加入")
 			for _, u := range r.users {
 				u.savePrefs() //nolint:errcheck
 			}
@@ -174,15 +174,15 @@ func main() {
 	})
 
 	if Config.Private {
-		Log.Printf("Starting a private Devzat server on port %d and profiling on port %d\n Edit your config to change who's allowed entry.", Config.Port, Config.ProfilePort)
+		Log.Printf("在端口上启动专用 Devzat 服务器 %d 和端口分析 %d\n 编辑您的配置以更改允许进入的人员", Config.Port, Config.ProfilePort)
 	} else {
-		Log.Printf("Starting a Devzat server on port %d and profiling on port %d\n", Config.Port, Config.ProfilePort)
+		Log.Printf("在端口上启动 Devzat 服务器 %d 和端口分析 %d\n", Config.Port, Config.ProfilePort)
 	}
 	go getMsgsFromSlack()
 	checkKey(Config.KeyFile)
 	if !Config.Private { // allow non-sshkey logins on a non-private server
 		go func() {
-			fmt.Println("Also serving on port", Config.AltPort)
+			fmt.Println("还在端口服务", Config.AltPort)
 			err := ssh.ListenAndServe(fmt.Sprintf(":%d", Config.AltPort), nil, ssh.HostKeyFile(Config.KeyFile))
 			if err != nil {
 				fmt.Println(err)
@@ -221,7 +221,7 @@ func (r *Room) broadcast(senderName, msg string) {
 			select {
 			case SlackChan <- toSendS:
 			default:
-				Log.Println("Overflow in Slack channel")
+				Log.Println("Slack 通道溢出")
 			}
 		}
 		if Integrations.Discord != nil {
@@ -232,7 +232,7 @@ func (r *Room) broadcast(senderName, msg string) {
 				channel:    r.name,
 			}:
 			default:
-				Log.Println("Overflow in Discord channel")
+				Log.Println("Discord 频道溢出")
 			}
 		}
 	}
@@ -366,7 +366,7 @@ func newUser(s ssh.Session) *User {
 	pty, winChan, isPty := s.Pty()
 	w := pty.Window.Width
 	if !isPty { // only support pty joins
-		term.Write([]byte("Devzat does not allow non-pty joins. What are you trying to pull here?"))
+		term.Write([]byte("Devzat 不允许non-pty联接。你想在这里拉什么?"))
 		return nil
 	}
 	if w <= 0 { // strange terminals
@@ -408,11 +408,11 @@ func newUser(s ssh.Session) *User {
 		}
 	}()
 
-	Log.Println("Connected " + u.Name + " [" + u.id + "]")
+	Log.Println("连接 " + u.Name + " [" + u.id + "]")
 
 	if bansContains(Bans, u.addr, u.id) || TORIPs[u.addr] {
-		Log.Println("Rejected " + u.Name + " [" + host + "] (banned)")
-		u.writeln(Devbot, "**You are banned**. If you feel this was a mistake, please reach out to the server admin. Include the following information: [ID "+u.id+"]")
+		Log.Println("拒绝 " + u.Name + " [" + host + "] (禁止)")
+		u.writeln(Devbot, "**您被禁止了**. 如果您认为这是一个错误，请联系服务器管理员。包括以下信息: [ID "+u.id+"]")
 		s.Close()
 		return nil
 	}
@@ -421,8 +421,8 @@ func newUser(s ssh.Session) *User {
 		_, isOnAllowlist := Config.Allowlist[u.id]
 		_, isAdmin := Config.Admins[u.id]
 		if !(isAdmin || isOnAllowlist) {
-			Log.Println("Rejected " + u.Name + " [" + u.id + "] (not on allowlist)")
-			u.writeln(Devbot, "You are not on the allowlist of this private server. If this is a mistake, send your id ("+u.id+") to the admin so that they can add you.")
+			Log.Println("拒绝 " + u.Name + " [" + u.id + "] (不在允许列表中)")
+			u.writeln(Devbot, "您不在此私人服务器的允许列表中。如果这是错误的，请发送您的 ID("+u.id+") 给管理员王果冻，以便他添加您。")
 			s.Close()
 			return nil
 		}
@@ -436,7 +436,7 @@ func newUser(s ssh.Session) *User {
 	})
 	if IDandIPsToTimesJoinedInMin[u.addr] > 6 || IDandIPsToTimesJoinedInMin[u.id] > 6 {
 		u.ban("")
-		MainRoom.broadcast(Devbot, u.Name+" has been banned automatically. ID: "+u.id)
+		MainRoom.broadcast(Devbot, u.Name+" 已被自动封禁. ID: "+u.id)
 		return nil
 	}
 
@@ -458,7 +458,7 @@ func newUser(s ssh.Session) *User {
 	go func() { // timeout to minimize inactive connections
 		err := u.loadPrefs()
 		if err != nil && !timedOut {
-			Log.Println("Could not load user:", err)
+			Log.Println("无法加载用户:", err)
 			return
 		}
 		if timedOut {
@@ -474,7 +474,7 @@ func newUser(s ssh.Session) *User {
 
 	select {
 	case <-time.After(time.Minute):
-		Log.Println("Timeout for user", stripansi.Strip(u.Name), "with ID", u.id)
+		Log.Println("用户超时", stripansi.Strip(u.Name), "with ID", u.id)
 		timedOut = true
 		s.Close()
 		return nil
@@ -513,13 +513,13 @@ func newUser(s ssh.Session) *User {
 
 	switch len(MainRoom.users) - 1 {
 	case 0:
-		u.writeln("", Blue.Paint("Welcome to the chat. There are no more users"))
+		u.writeln("", Blue.Paint("欢迎来到聊天室.目前没有更多用户"))
 	case 1:
-		u.writeln("", Yellow.Paint("Welcome to the chat. There is one more user"))
+		u.writeln("", Yellow.Paint("欢迎来到聊天室.还有一个用户"))
 	default:
-		u.writeln("", Green.Paint("Welcome to the chat. There are", strconv.Itoa(len(MainRoom.users)-1), "more users"))
+		u.writeln("", Green.Paint("欢迎来到聊天室.有", strconv.Itoa(len(MainRoom.users)-1), "用户"))
 	}
-	MainRoom.broadcast("", Green.Paint(" --> ")+u.Name+" has joined the chat")
+	MainRoom.broadcast("", Green.Paint(" --> ")+u.Name+" 已加入聊天")
 	return u
 }
 
@@ -581,7 +581,7 @@ func (u *User) close(msg string) {
 		return
 	}
 	if time.Since(u.joinTime) > time.Minute/2 {
-		msg += ". They were online for " + printPrettyDuration(time.Since(u.joinTime))
+		msg += ". 他们在线 " + printPrettyDuration(time.Since(u.joinTime))
 	}
 	u.room.broadcast("", Red.Paint(" <-- ")+msg)
 }
@@ -639,7 +639,7 @@ func (u *User) writelnWithImageCache(senderName string, msg string, cache map[st
 	}
 	_, err := u.term.Write([]byte(msg + "\n"))
 	if err != nil {
-		u.close(u.Name + " has left the chat because of an error writing to their terminal: " + err.Error())
+		u.close(u.Name + " 由于写入终端时出错而离开了聊天: " + err.Error())
 	}
 }
 
@@ -661,7 +661,7 @@ func (u *User) pickUsername(possibleName string) error {
 		return err
 	}
 	if stripansi.Strip(u.Name) != stripansi.Strip(oldName) && stripansi.Strip(u.Name) != possibleName { // did the name change, and is it not what the User entered?
-		u.room.broadcast(Devbot, oldName+" is now called "+u.Name)
+		u.room.broadcast(Devbot, oldName+" 现在名称为 "+u.Name)
 	}
 	return nil
 }
@@ -672,12 +672,12 @@ func (u *User) pickUsernameQuietly(possibleName string) error {
 	var err error
 	for {
 		if possibleName == "" || strings.HasPrefix(possibleName, "#") || possibleName == "devbot" || strings.HasPrefix(possibleName, "@") {
-			u.writeln("", "Your username is invalid. Pick a different one:")
+			u.writeln("", "您的用户名无效。请选择其他用户名:")
 		} else if otherUser, dup := userDuplicate(u.room, possibleName); dup {
 			if otherUser == u {
 				break // allow selecting the same name as before the user tried to change it
 			}
-			u.writeln("", "Your username is already in use. Pick a different one:")
+			u.writeln("", "您的用户名已被使用。请选择其他用户名:")
 		} else { // valid name
 			break
 		}
@@ -768,14 +768,14 @@ func (u *User) changeRoom(r *Room) {
 		return
 	}
 	u.room.users = remove(u.room.users, u)
-	u.room.broadcast("", u.Name+" is joining "+Blue.Paint(r.name)) // tell the old room
+	u.room.broadcast("", u.Name+" 正在加入 "+Blue.Paint(r.name)) // tell the old room
 	cleanupRoom(u.room)
 	u.room = r
 	if _, dup := userDuplicate(u.room, u.Name); dup {
 		u.pickUsername("") //nolint:errcheck // if reading input failed the next repl will err out
 	}
 	u.room.users = append(u.room.users, u)
-	u.room.broadcast("", Green.Paint(" --> ")+u.Name+" has joined "+Blue.Paint(u.room.name))
+	u.room.broadcast("", Green.Paint(" --> ")+u.Name+" 已加入 "+Blue.Paint(u.room.name))
 }
 
 func (u *User) formatPrompt() {
@@ -828,7 +828,7 @@ func (u *User) repl() {
 		u.lastInteract = time.Now()
 		line, err := u.term.ReadLine()
 		if err == io.EOF {
-			u.close(u.Name + " has left the chat")
+			u.close(u.Name + " 已离开聊天")
 			return
 		}
 
@@ -847,7 +847,7 @@ func (u *User) repl() {
 		}
 		if err != nil {
 			Log.Println(u.Name, err)
-			u.close(u.Name + " has left the chat due to an error: " + err.Error())
+			u.close(u.Name + " 由于错误已离开聊天: " + err.Error())
 			return
 		}
 		if len(line) > maxMsgLen { // limit msg len as early as possible.
@@ -872,15 +872,15 @@ func (u *User) repl() {
 			AntispamMessages[u.id]--
 		})
 		if AntispamMessages[u.id] >= 30 {
-			u.room.broadcast(Devbot, u.Name+", stop spamming or you could get banned.")
+			u.room.broadcast(Devbot, u.Name+", 停止发送垃圾信息，否则您可能会被封禁.")
 		}
 		if AntispamMessages[u.id] >= 50 {
 			if !bansContains(Bans, u.addr, u.id) {
 				Bans = append(Bans, Ban{u.addr, u.id})
 				saveBans()
 			}
-			u.writeln(Devbot, "anti-spam triggered")
-			u.close(Red.Paint(u.Name + " has been banned for spamming"))
+			u.writeln(Devbot, "触发反垃圾邮件")
+			u.close(Red.Paint(u.Name + " 已被禁止发送垃圾邮件"))
 			return
 		}
 		runCommands(line, u)

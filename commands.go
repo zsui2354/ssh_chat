@@ -165,21 +165,21 @@ func runCommands(line string, u *User) {
 func dmCMD(rest string, u *User) {
 	restSplit := strings.Fields(rest)
 	if len(restSplit) < 2 {
-		u.writeln(Devbot, "You gotta have a message, mate")
+		u.writeln(Devbot, "你得有个信息，伙计")
 		return
 	}
 	peer, ok := findUserByName(u.room, restSplit[0])
 	if !ok {
-		u.writeln(Devbot, "No such person lol, who you wanna dm? (you might be in the wrong room)")
+		u.writeln(Devbot, "没有这个人哈哈，你想私信谁？（您可能在错误的房间里)")
 		return
 	}
 	msg := strings.TrimSpace(strings.TrimPrefix(rest, restSplit[0]))
 	u.writeln(peer.Name+" <- ", msg)
 	if u == peer {
-		devbotRespond(u.room, []string{"You must be really lonely, DMing yourself.",
-			"Don't worry, I won't judge :wink:",
-			"srsly?",
-			"what an idiot"}, 30)
+		devbotRespond(u.room, []string{"你一定是真的寂寞，私信自己.",
+			"别担心，我不会评头论足 :wink:",
+			"真的?",
+			"真是个白痴"}, 30)
 		return
 	}
 	peer.writeln(u.Name+" -> ", msg)
@@ -189,10 +189,10 @@ func hangCMD(rest string, u *User) {
 	if len([]rune(rest)) > 1 {
 		if !u.isBridge {
 			u.writeln(u.Name, "hang "+rest)
-			u.writeln(Devbot, "(that word won't show dw)")
+			u.writeln(Devbot, "(该词不会显示)")
 		}
 		hangGame = &hangman{rest, 15, " "} // default value of guesses so empty space is given away
-		u.room.broadcast(Devbot, u.Name+" has started a new game of Hangman! Guess letters with hang <letter>")
+		u.room.broadcast(Devbot, u.Name+" 开始了新的刽子手游戏！ 用 hang 猜字母 <letter>")
 		u.room.broadcast(Devbot, "```\n"+hangPrint(hangGame)+"\nTries: "+strconv.Itoa(hangGame.triesLeft)+"\n```")
 		return
 	}
@@ -200,19 +200,19 @@ func hangCMD(rest string, u *User) {
 		u.room.broadcast(u.Name, "hang "+rest)
 	}
 	if strings.Trim(hangGame.word, hangGame.guesses) == "" {
-		u.room.broadcast(Devbot, "The game has ended. Start a new game with hang <word>")
+		u.room.broadcast(Devbot, "游戏已结束。使用 hang 开始新游戏 <word>")
 		return
 	}
 	if len(rest) == 0 {
-		u.room.broadcast(Devbot, "Start a new game with hang <word> or guess with hang <letter>")
+		u.room.broadcast(Devbot, "使用 hang 开始新游戏<word>，或使用 hang 开始猜测 <letter>")
 		return
 	}
 	if hangGame.triesLeft == 0 {
-		u.room.broadcast(Devbot, "No more tries! The word was "+hangGame.word)
+		u.room.broadcast(Devbot, "不要再尝试了！这个词是 "+hangGame.word)
 		return
 	}
 	if strings.Contains(hangGame.guesses, rest) {
-		u.room.broadcast(Devbot, "You already guessed "+rest)
+		u.room.broadcast(Devbot, "您已经猜到了 "+rest)
 		return
 	}
 	hangGame.guesses += rest
@@ -222,9 +222,9 @@ func hangCMD(rest string, u *User) {
 	display := hangPrint(hangGame)
 	u.room.broadcast(Devbot, "```\n"+display+"\nTries: "+strconv.Itoa(hangGame.triesLeft)+"\n```")
 	if strings.Trim(hangGame.word, hangGame.guesses) == "" {
-		u.room.broadcast(Devbot, "You got it! The word was "+hangGame.word)
+		u.room.broadcast(Devbot, "没问题！这个词是 "+hangGame.word)
 	} else if hangGame.triesLeft == 0 {
-		u.room.broadcast(Devbot, "No more tries! The word was "+hangGame.word)
+		u.room.broadcast(Devbot, "不要再尝试了！这个词是 "+hangGame.word)
 	}
 }
 
@@ -239,10 +239,10 @@ func usersCMD(_ string, u *User) {
 func dmRoomCMD(line string, u *User) {
 	u.writeln(u.messaging.Name+" <- ", line)
 	if u == u.messaging {
-		devbotRespond(u.room, []string{"You must be really lonely, DMing yourself.",
-			"Don't worry, I won't judge :wink:",
-			"srsly?",
-			"what an idiot"}, 30)
+		devbotRespond(u.room, []string{"你一定是真的寂寞，私信自己.",
+			"别担心，我不会评判 :wink:",
+			"真的?",
+			"真是个白痴"}, 30)
 		return
 	}
 	u.messaging.writeln(u.Name+" -> ", line)
@@ -250,15 +250,15 @@ func dmRoomCMD(line string, u *User) {
 
 // named devmonk at the request of a certain ced
 func devmonkCMD(_ string, u *User) {
-	sentences := []string{"I really want to go to work, but I am too sick to drive.", "The fence was confused about whether it was supposed to keep things in or keep things out.", "He found the end of the rainbow and was surprised at what he found there.", "He had concluded that pigs must be able to fly in Hog Heaven.", "I just wanted to tell you I could see the love you have for your child by the way you look at her.", "We will not allow you to bring your pet armadillo along.", "The father died during childbirth.", "I covered my friend in baby oil.", "Cursive writing is the best way to build a race track.", "My Mum tries to be cool by saying that she likes all the same things that I do.", "The sky is clear; the stars are twinkling.", "Flash photography is best used in full sunlight.", "The rusty nail stood erect, angled at a 45-degree angle, just waiting for the perfect barefoot to come along.", "People keep telling me \"orange\" but I still prefer \"pink\".", "Peanut butter and jelly caused the elderly lady to think about her past.", "She always had an interesting perspective on why the world must be flat.", "People who insist on picking their teeth with their elbows are so annoying!", "Joe discovered that traffic cones make excellent megaphones.", "They say people remember important moments in their life well, yet no one even remembers their own birth.", "Purple is the best city in the forest.", "The book is in front of the table.", "Everyone was curious about the large white blimp that appeared overnight.", "He wondered if she would appreciate his toenail collection.", "Situps are a terrible way to end your day.", "He barked orders at his daughters but they just stared back with amusement.", "She couldn't decide of the glass was half empty or half full so she drank it.", "It caught him off guard that space smelled of seared steak.", "There are few things better in life than a slice of pie.", "After exploring the abandoned building, he started to believe in ghosts.", "This is a Japanese doll.", "I've never seen a more beautiful brandy glass filled with wine.", "Don't piss in my garden and tell me you're trying to help my plants grow.", "She looked at the masterpiece hanging in the museum but all she could think is that her five-year-old could do better.", "Nobody loves a pig wearing lipstick.", "She always speaks to him in a loud voice.", "The teens wondered what was kept in the red shed on the far edge of the school grounds.", "I'll have you know I've written over fifty novels", "He didn't understand why the bird wanted to ride the bicycle.", "Potato wedges probably are not best for relationships.", "Baby wipes are made of chocolate stardust.", "Lucifer was surprised at the amount of life at Death Valley.", "She was too busy always talking about what she wanted to do to actually do any of it.", "The sudden rainstorm washed crocodiles into the ocean.", "I used to live in my neighbor's fishpond, but the aesthetic wasn't to my taste.", "He kept telling himself that one day it would all somehow make sense.", "The random sentence generator generated a random sentence about a random sentence.", "The reservoir water level continued to lower while we enjoyed our long shower.", "A song can make or ruin a person’s day if they let it get to them.", "He stomped on his fruit loops and thus became a cereal killer.", "I know many children ask for a pony, but I wanted a bicycle with rockets strapped to it."}
+	sentences := []string{"我真的很想去上班，但我病得太重了，不能开车.", "栅栏搞不清楚它到底是要把东西挡在里面，还是要把东西挡在外面.", "他发现了彩虹的尽头，并对那里的一切感到惊讶.", "他得出结论，猪在猪天堂一定能飞.", "我只想告诉你，从你看孩子的眼神中，我看到了你对她的爱.", "我们不允许您携带宠物犰狳。.", "父亲在分娩时死亡.", "我用婴儿油涂满了我的朋友.", "草书是建造赛道的最佳方法.", "我妈妈为了装酷，说她喜欢的东西都和我一样.", "天空晴朗;星星闪烁.", "闪光灯摄影最适合在阳光充足的情况下使用.", "锈迹斑斑的钉子直立着，呈 45 度角，正等待着最合适的赤脚出现.", "人们不断告诉我 \"橙色\" 但我还是更喜欢 \"粉红色\".", "花生酱和果冻让这位老太太想起了她的过去.", "她总是对为什么世界必须是平的有一个有趣的观点.", "坚持用手肘剔牙的人真讨厌!", "Joe 发现交通锥是极好的扩音器.", "有人说，人们能很好地记住生命中的重要时刻，但却没有人记得自己的出生.", "紫色是森林中最好的城市.", "书就在桌子前面.", "每个人都对一夜之间出现的白色大飞艇感到好奇.", "他想知道她是否会喜欢他的脚趾甲收藏.", "仰卧起坐是结束一天的糟糕方式.", "他对女儿们发号施令，但她们只是回过头来瞪着他，一脸的好笑.", "她拿不准杯子是半空还是半满，于是一饮而尽.", "让他措手不及的是，空间里弥漫着烤牛排的香味.", "生活中没有什么比一块馅饼更美好的了.", "在探索了这座废弃的建筑后，他开始相信鬼魂的存在.", "这是一个日本娃娃.", "I've never seen a more beautiful brandy glass filled with wine.", "Don't piss in my garden and tell me you're trying to help my plants grow.", "She looked at the masterpiece hanging in the museum but all she could think is that her five-year-old could do better.", "Nobody loves a pig wearing lipstick.", "She always speaks to him in a loud voice.", "The teens wondered what was kept in the red shed on the far edge of the school grounds.", "I'll have you know I've written over fifty novels", "He didn't understand why the bird wanted to ride the bicycle.", "Potato wedges probably are not best for relationships.", "Baby wipes are made of chocolate stardust.", "Lucifer was surprised at the amount of life at Death Valley.", "She was too busy always talking about what she wanted to do to actually do any of it.", "The sudden rainstorm washed crocodiles into the ocean.", "I used to live in my neighbor's fishpond, but the aesthetic wasn't to my taste.", "He kept telling himself that one day it would all somehow make sense.", "The random sentence generator generated a random sentence about a random sentence.", "The reservoir water level continued to lower while we enjoyed our long shower.", "A song can make or ruin a person’s day if they let it get to them.", "He stomped on his fruit loops and thus became a cereal killer.", "I know many children ask for a pony, but I wanted a bicycle with rockets strapped to it."}
 	text := sentences[rand.Intn(len(sentences))]
-	u.writeln(Devbot, "Okay type this text: \n\n> "+text)
+	u.writeln(Devbot, "好的，键入此文本: \n\n> "+text)
 	u.term.SetPrompt("> ")
 	defer u.formatPrompt()
 	start := time.Now()
 	line, err := u.term.ReadLine()
 	if err == term.ErrPasteIndicator { // TODO: doesn't work for some reason?
-		u.room.broadcast(Devbot, "SMH did you know that "+u.Name+" tried to cheat in a typing game?")
+		u.room.broadcast(Devbot, "SMH 你知道吗？ "+u.Name+" 试图在打字游戏中作弊?")
 		return
 	}
 	dur := time.Since(start)
@@ -287,7 +287,7 @@ func devmonkCMD(_ string, u *User) {
 		}
 	}
 
-	u.room.broadcast(Devbot, "Okay "+u.Name+", you typed that in "+dur.Truncate(time.Second/10).String()+" so your speed is "+
+	u.room.broadcast(Devbot, "好 "+u.Name+", 你输入了 "+dur.Truncate(time.Second/10).String()+" 所以你的速度是 "+
 		strconv.FormatFloat(
 			float64(len(strings.Fields(text)))/dur.Minutes(), 'f', 1, 64,
 		)+" wpm"+" with accuracy "+strconv.FormatFloat(accuracy, 'f', 1, 64)+"%",
@@ -296,8 +296,8 @@ func devmonkCMD(_ string, u *User) {
 
 func ticCMD(rest string, u *User) {
 	if rest == "" {
-		u.room.broadcast(Devbot, "Starting a new game of Tic Tac Toe! The first player is always X.")
-		u.room.broadcast(Devbot, "Play using tic <cell num>")
+		u.room.broadcast(Devbot, "开始新的井字游戏！第一个玩家始终是 X.")
+		u.room.broadcast(Devbot, "使用 tic 玩游戏 <cell num>")
 		currentPlayer = tictactoe.X
 		tttGame = new(tictactoe.Board)
 		u.room.broadcast(Devbot, "```\n"+" 1 │ 2 │ 3\n───┼───┼───\n 4 │ 5 │ 6\n───┼───┼───\n 7 │ 8 │ 9\n"+"\n```")
@@ -305,11 +305,11 @@ func ticCMD(rest string, u *User) {
 	}
 	m, err := strconv.Atoi(rest)
 	if err != nil {
-		u.room.broadcast(Devbot, "Make sure you're using a number lol")
+		u.room.broadcast(Devbot, "确保你用的是数字，乐")
 		return
 	}
 	if m < 1 || m > 9 {
-		u.room.broadcast(Devbot, "Moves are numbers between 1 and 9!")
+		u.room.broadcast(Devbot, "移动是 1 到 9 之间的数字!")
 		return
 	}
 	err = tttGame.Apply(tictactoe.Move(m-1), currentPlayer)
@@ -331,7 +331,7 @@ func ticCMD(rest string, u *User) {
 }
 
 func exitCMD(_ string, u *User) {
-	u.close(u.Name + " has left the chat")
+	u.close(u.Name + " 已离开聊天")
 }
 
 func bellCMD(rest string, u *User) {
@@ -357,7 +357,7 @@ func bellCMD(rest string, u *User) {
 			u.room.broadcast("", "bell off (never)")
 		}
 	default:
-		u.room.broadcast(Devbot, "your options are off, on and all")
+		u.room.broadcast(Devbot, "您的选项包括 off、on 和 all")
 	}
 }
 
@@ -365,7 +365,7 @@ func cdCMD(rest string, u *User) {
 	defer u.formatPrompt()
 	if u.messaging != nil {
 		u.messaging = nil
-		u.writeln(Devbot, "Left private chat")
+		u.writeln(Devbot, "离开私人聊天")
 		if rest == "" || rest == ".." {
 			return
 		}
@@ -381,7 +381,7 @@ func cdCMD(rest string, u *User) {
 		u.room.broadcast(u.Name, "cd "+rest)
 		if len(rest) > MaxRoomNameLen {
 			rest = rest[0:MaxRoomNameLen]
-			u.room.broadcast(Devbot, "Room name lengths are limited, so I'm shortening it to "+rest+".")
+			u.room.broadcast(Devbot, "房间名称的长度是有限的，所以我将其缩短为 "+rest+".")
 		}
 		if v, ok := Rooms[rest]; ok {
 			u.changeRoom(v)
@@ -408,28 +408,28 @@ func cdCMD(rest string, u *User) {
 		for _, kv := range ss {
 			roomsInfo += Blue.Paint(kv.roomName) + ": " + printUsersInRoom(Rooms[kv.roomName]) + "  \n"
 		}
-		u.room.broadcast("", "Rooms and users  \n"+strings.TrimSpace(roomsInfo))
+		u.room.broadcast("", "聊天室和用户  \n"+strings.TrimSpace(roomsInfo))
 		return
 	}
 	name := strings.Fields(rest)[0]
 	if len(name) == 0 {
-		u.writeln(Devbot, "You think people have empty names?")
+		u.writeln(Devbot, "你认为人们的名字是空的?")
 		return
 	}
 	peer, ok := findUserByName(u.room, name)
 	if !ok {
-		u.writeln(Devbot, "No such person lol, who do you want to dm? (you might be in the wrong room)")
+		u.writeln(Devbot, "没有这个人哈哈，你想私信谁？（您可能在错误的房间里)")
 		return
 	}
 	u.messaging = peer
-	u.writeln(Devbot, "Now in DMs with "+peer.Name+". To leave use cd ..")
+	u.writeln(Devbot, "现在在 DMs 中与 "+peer.Name+". 要离开，请使用 cd ..")
 }
 
 func tzCMD(tzArg string, u *User) {
 	defer u.formatPrompt()
 	if tzArg == "" {
 		u.Timezone.Location = nil
-		u.room.broadcast(Devbot, "Enabled relative times!")
+		u.room.broadcast(Devbot, "启用的相对时间!")
 		return
 	}
 	tzArgList := strings.Fields(tzArg)
@@ -447,16 +447,16 @@ func tzCMD(tzArg string, u *User) {
 	var err error
 	u.Timezone.Location, err = time.LoadLocation(tz)
 	if err != nil {
-		u.room.broadcast(Devbot, "Weird timezone you have there, use the format Continent/City, the usual US timezones (PST, PDT, EST, EDT...) or check nodatime.org/TimeZones!")
+		u.room.broadcast(Devbot, "你在那里有奇怪的时区，使用格式 大陆/城市，通常的美国时区（PST、PDT、EST、EDT...）或勾选 nodatime.org/TimeZones！")
 		return
 	}
 	u.FormatTime24 = len(tzArgList) == 2 && tzArgList[1] == "24h"
-	u.room.broadcast(Devbot, "Changed your timezone!")
+	u.room.broadcast(Devbot, "更改了您的时区!")
 }
 
 func bioCMD(line string, u *User) {
 	if line == "" {
-		u.writeln(Devbot, "Your current bio is:  \n> "+u.Bio)
+		u.writeln(Devbot, "您当前的简历是:  \n> "+u.Bio)
 		u.term.SetPrompt("> ")
 		defer u.formatPrompt()
 		for {
@@ -467,7 +467,7 @@ func bioCMD(line string, u *User) {
 			input = strings.TrimSpace(input)
 			if input != "" {
 				if len(input) > MaxBioLen {
-					u.writeln(Devbot, "Your bio is too long. It shouldn't be more than "+strconv.Itoa(MaxBioLen)+" characters.")
+					u.writeln(Devbot, "你的简历太长了。它不应超过 "+strconv.Itoa(MaxBioLen)+" 字符.")
 				}
 				u.Bio = input
 				// make sure it gets saved now so it stays even if the server crashes
@@ -478,7 +478,7 @@ func bioCMD(line string, u *User) {
 	}
 	target, ok := findUserByName(u.room, line)
 	if !ok {
-		u.room.broadcast(Devbot, "Who???")
+		u.room.broadcast(Devbot, "谁???")
 		return
 	}
 	u.room.broadcast("", target.Bio)
@@ -487,7 +487,7 @@ func bioCMD(line string, u *User) {
 func idCMD(line string, u *User) {
 	victim, ok := findUserByName(u.room, line)
 	if !ok {
-		u.room.broadcast("", "User not found")
+		u.room.broadcast("", "未找到用户")
 		return
 	}
 	u.room.broadcast("", victim.id)
@@ -501,7 +501,7 @@ func promptCMD(line string, u *User) {
 	u.Prompt = line
 	u.formatPrompt()
 	if line == "" {
-		u.writeln(Devbot, "(Your prompt is now empty. Did you mean to get more info about your prompt? Run `man prompt` for more info)")
+		u.writeln(Devbot, "(您的提示现在为空。您是否希望获取有关提示的更多信息？运行 'man prompt' 了解更多信息)")
 	}
 }
 
@@ -515,15 +515,15 @@ func listBansCMD(_ string, u *User) {
 
 func unbanCMD(toUnban string, u *User) {
 	if !auth(u) {
-		u.room.broadcast(Devbot, "Not authorized")
+		u.room.broadcast(Devbot, "未授权")
 		return
 	}
 
 	if unbanIDorIP(toUnban) {
-		u.room.broadcast(Devbot, "Unbanned person: "+toUnban)
+		u.room.broadcast(Devbot, "被解禁者: "+toUnban)
 		saveBans()
 	} else {
-		u.room.broadcast(Devbot, "I couldn't find that person")
+		u.room.broadcast(Devbot, "我找不到那个人")
 	}
 }
 
@@ -544,7 +544,7 @@ func unbanIDorIP(toUnban string) bool {
 func banCMD(line string, u *User) {
 	split := strings.Split(line, " ")
 	if len(split) == 0 {
-		u.room.broadcast(Devbot, "Which user do you want to ban?")
+		u.room.broadcast(Devbot, "您要禁止哪个用户?")
 		return
 	}
 	var victim *User
@@ -553,14 +553,14 @@ func banCMD(line string, u *User) {
 	banReason := "" // Initial ban reason is an empty string
 
 	if split[0] == "devbot" {
-		u.room.broadcast(Devbot, "Do you really think you can ban me, puny human?")
+		u.room.broadcast(Devbot, "你真的觉得你可以封禁我吗，渺小的人类?")
 		victim = u // mwahahahaha - devbot
 		banner = Devbot
 	} else if !auth(u) {
-		u.room.broadcast(Devbot, "Not authorized")
+		u.room.broadcast(Devbot, "未授权")
 		return
 	} else if victim, ok = findUserByName(u.room, split[0]); !ok {
-		u.room.broadcast("", "User not found")
+		u.room.broadcast("", "未找到用户")
 		return
 	}
 
@@ -573,7 +573,7 @@ func banCMD(line string, u *User) {
 			banReason = strings.TrimSpace(strings.TrimSuffix(strings.TrimPrefix(line, split[0]), split[len(split)-1]))
 		}
 		if err == nil { // there was a duration
-			victim.ban(victim.Name + " has been banned by " + banner + " for " + dur.String() + " " + banReason)
+			victim.ban(victim.Name + " 已被 " + banner + " 为 " + dur.String() + " " + banReason)
 			go func(id string) {
 				time.Sleep(dur)
 				unbanIDorIP(id)
@@ -581,35 +581,35 @@ func banCMD(line string, u *User) {
 			return
 		}
 	}
-	victim.ban(victim.Name + " has been banned by " + banner + " " + banReason)
+	victim.ban(victim.Name + " 已被 " + banner + " " + banReason)
 }
 
 func kickCMD(line string, u *User) {
 	victim, ok := findUserByName(u.room, line)
 	if !ok {
 		if line == "devbot" {
-			u.room.broadcast(Devbot, "You will pay for this")
-			u.close(u.Name + Red.Paint(" has been kicked by ") + Devbot)
+			u.room.broadcast(Devbot, "您将为此付出代价")
+			u.close(u.Name + Red.Paint(" 已被踢出 ") + Devbot)
 		} else {
-			u.room.broadcast("", "User not found")
+			u.room.broadcast("", "未找到用户")
 		}
 		return
 	}
 	if !auth(u) && victim.id != u.id {
-		u.room.broadcast(Devbot, "Not authorized")
+		u.room.broadcast(Devbot, "未授权")
 		return
 	}
-	victim.close(victim.Name + Red.Paint(" has been kicked by ") + u.Name)
+	victim.close(victim.Name + Red.Paint(" 已被踢出 ") + u.Name)
 }
 
 func muteCMD(line string, u *User) {
 	victim, ok := findUserByName(u.room, line)
 	if !ok {
-		u.room.broadcast("", "User not found")
+		u.room.broadcast("", "未找到用户")
 		return
 	}
 	if !auth(u) && victim.id != u.id {
-		u.room.broadcast(Devbot, "Not authorized")
+		u.room.broadcast(Devbot, "未授权")
 		return
 	}
 	victim.IsMuted = true
@@ -618,11 +618,11 @@ func muteCMD(line string, u *User) {
 func unmuteCMD(line string, u *User) {
 	victim, ok := findUserByName(u.room, line)
 	if !ok {
-		u.room.broadcast("", "User not found")
+		u.room.broadcast("", "未找到用户")
 		return
 	}
 	if !auth(u) && victim.id != u.id {
-		u.room.broadcast(Devbot, "Not authorized")
+		u.room.broadcast(Devbot, "未授权")
 		return
 	}
 	victim.IsMuted = false
@@ -637,7 +637,7 @@ func colorCMD(rest string, u *User) {
 }
 
 func adminsCMD(_ string, u *User) {
-	msg := "Admins by ID:  \n"
+	msg := "管理员 ID:  \n"
 	i := 1
 	for id, info := range Config.Admins {
 		if len(id) > 10 {
@@ -650,26 +650,58 @@ func adminsCMD(_ string, u *User) {
 }
 
 func helpCMD(_ string, u *User) {
-	u.room.broadcast("", `Welcome to Devzat! Devzat is chat over SSH: github.com/quackduck/devzat  
-Because there's SSH apps on all platforms, even on mobile, you can join from anywhere.
+	u.room.broadcast("", `欢迎来到 王果冻的聊天室! 聊天室通过 SSH 聊天： ssh apache.vyantaosheweining.top -p 2221
+因为所有平台上都有 SSH 应用程序，甚至在移动设备上，所以您可以从任何地方加入。
 
-Run cmds to see a list of commands.
+运行 cmds 查看命令列表.
 
-Interesting features:
-* Rooms! Run cd to see all rooms and use cd #foo to join a new room.
-* Markdown support! Tables, headers, italics and everything. Just use \\n in place of newlines.
-* Code syntax highlighting. Use Markdown fences to send code. Run eg-code to see an example.
-* Direct messages! Send a quick DM using =user <msg> or stay in DMs by running cd @user.
-* Timezone support, use tz Continent/City to set your timezone.
-* Built in Tic Tac Toe and Hangman! Run tic or hang <word> to start new games.
-* Emoji replacements! \:rocket\: => :rocket: (like on Slack and Discord)
+有趣的功能:
+* 房间！运行 cd 查看所有房间，并使用 cd #foo 加入新房间.
+* Markdown语法支持! 表格、标题、斜体和所有内容。只需使用 \\n 代替换行符.
+* 代码语法突出显示。使用 Markdown 语法发送代码。运行 eg-code 查看示例.
+* 直接消息！使用 =user <msg> 快速发送 DM,或通过运行 cd @user 留在 DM 中。.
+* 时区支持，使用 tz Continent/City 设置您的时区.
+* 内置井字游戏和刽子手！运行 tic 或 hang <word> 开始新游戏.
+* 表情符号替换！\:rocket\: => :rocket: （就像在 Slack 和 Discord 上一样）
 
-For replacing newlines, I often use https\://bulkseotools.com/add-remove-line-breaks.php.
+在替换换行符时，也可使用 https\://bulkseotools.com/add-remove-line-breaks.php.
 
-Join the Devzat discord server: https://discord.gg/yERQNTBbD5
+加入项目Discord 服务器: https://discord.gg/yERQNTBbD5
 
-Made by Ishan Goel with feature ideas from friends.  
-Thanks to Caleb Denio for lending his server!`)
+命令：
+   =<user>   <msg>           DM <user> 与 <msg>
+   users                     列出用户
+   color     <color>         更改您姓名的颜色
+   exit                      离开聊天
+   help                      显示帮助
+   man       <cmd>           获取特定命令的帮助
+   emojis                    查看表情符号列表
+   bell      on|off|all      ANSI 钟声 (on), 从不 (off) 或每条消息 (all)
+   clear                     清除屏幕
+   hang      <char|word>     玩刽子手游戏
+   tic       <cell num>      玩井字游戏！
+   devmonk                   测试打字速度
+   cd        #room|user      加入 #room, DM 用户或运行 cd 查看列表
+   tz        <zone> [24h]    设置 IANA 时区 (like tz Asia/Dubai) 并可选择 24 小时
+   nick      <name>          更改您的用户名
+   pronouns  @user|pronouns  设置您的代词或获取其他用户的
+   theme     <theme>|list    更改语法高亮主题
+   rest                      不常用命令列表
+   cmds                      显示此消息
+
+其余部分：
+   people                  查看有关加入的好人的信息
+   id       <user>         获取用户的唯一 ID (hashed key)
+   admins                  打印 ID (hashed key) 面向所有管理员
+   eg-code  [big]          示例语法突出显示的代码
+   lsbans                  列出禁止的 ID
+   ban      <user>         禁令 <user> (admin)
+   unban    <IP|ID> [dur]  取消禁止人员，并选择性地在一段时间内 (admin)
+   kick     <user>         踢出 <user> (admin)
+   art                     展示一些熊猫艺术
+   pwd                     显示当前房间
+   shrug                   ¯\_(ツ)_/¯
+`)
 }
 
 func catCMD(line string, u *User) {
@@ -678,7 +710,7 @@ func catCMD(line string, u *User) {
 	} else if line == "README.md" {
 		helpCMD(line, u)
 	} else {
-		u.room.broadcast("", "cat: "+line+": Permission denied")
+		u.room.broadcast("", "cat: "+line+": 权限被拒绝")
 	}
 }
 
@@ -687,7 +719,7 @@ func rmCMD(line string, u *User) {
 		u.room.broadcast("", `usage: rm [-f | -i] [-dPRrvW] file ...
 unlink file`)
 	} else {
-		u.room.broadcast("", "rm: "+line+": Permission denied, sucker")
+		u.room.broadcast("", "rm: "+line+": 权限被拒绝, 笨蛋")
 	}
 }
 
@@ -715,19 +747,19 @@ func init() { // add Matt Gleich's blackbird theme from https://github.com/black
 
 func themeCMD(line string, u *User) {
 	// TODO: make this work with glamour
-	u.room.broadcast(Devbot, "Themes do not currently work because Devzat is switching to using glamour for rendering.")
+	u.room.broadcast(Devbot, "主题当前不起作用，因为 Devzat 正在切换到使用 glamour 进行渲染.")
 	if line == "list" {
-		u.room.broadcast(Devbot, "Available themes: "+strings.Join(chromastyles.Names(), ", "))
+		u.room.broadcast(Devbot, "可用主题: "+strings.Join(chromastyles.Names(), ", "))
 		return
 	}
 	for _, name := range chromastyles.Names() {
 		if name == line {
 			//markdown.CurrentTheme = chromastyles.Get(name)
-			u.room.broadcast(Devbot, "Theme set to "+name)
+			u.room.broadcast(Devbot, "主题设置为 "+name)
 			return
 		}
 	}
-	u.room.broadcast(Devbot, "What theme is that? Use theme list to see what's available.")
+	u.room.broadcast(Devbot, "那是什么主题？使用主题列表查看可用内容.")
 }
 
 func asciiArtCMD(_ string, u *User) {
@@ -750,28 +782,28 @@ func pronounsCMD(line string, u *User) {
 	args := strings.Fields(line)
 
 	if line == "" {
-		u.room.broadcast(Devbot, "Set pronouns by providing em or query a user's pronouns!")
+		u.room.broadcast(Devbot, "通过提供 em 或查询用户的代词来设置代词!")
 		return
 	}
 
 	if len(args) == 1 && strings.HasPrefix(args[0], "@") {
 		victim, ok := findUserByName(u.room, args[0][1:])
 		if !ok {
-			u.room.broadcast(Devbot, "Who's that?")
+			u.room.broadcast(Devbot, "那是谁?")
 			return
 		}
-		u.room.broadcast(Devbot, victim.Name+"'s pronouns are "+victim.displayPronouns())
+		u.room.broadcast(Devbot, victim.Name+"'的代词是 "+victim.displayPronouns())
 		return
 	}
 
 	u.Pronouns = strings.Fields(strings.ReplaceAll(strings.ToLower(line), "\n", ""))
 	//u.changeColor(u.Color) // refresh pronouns
-	u.room.broadcast(Devbot, u.Name+" now goes by "+u.displayPronouns())
+	u.room.broadcast(Devbot, u.Name+" 现在过去了 "+u.displayPronouns())
 }
 
 func emojisCMD(_ string, u *User) {
-	u.room.broadcast(Devbot, `See the complete list at https://github.com/ikatyang/emoji-cheat-sheet/  
-Here are a few examples (type :emoji_text: to use):  
+	u.room.broadcast(Devbot, `完整列表请参见 https://github.com/ikatyang/emoji-cheat-sheet/  
+下面是几个例子 (type :emoji_text: to use):  
 :doughnut: doughnut  
 :yum: yum  
 :joy: joy  
@@ -788,43 +820,43 @@ Here are a few examples (type :emoji_text: to use):
 }
 
 func commandsRestCMD(_ string, u *User) {
-	u.room.broadcast("", "The rest  \n"+autogenCommands(RestCMDs))
+	u.room.broadcast("", "其余的  \n"+autogenCommands(RestCMDs))
 }
 
 func manCMD(rest string, u *User) {
 	if rest == "" {
-		u.room.broadcast(Devbot, "What command do you want help with?")
+		u.room.broadcast(Devbot, "您需要什么命令的帮助?")
 		return
 	}
 
 	if rest == "prompt" {
-		u.room.broadcast(Devbot, `prompt <prompt> sets your prompt
+		u.room.broadcast(Devbot, `prompt <prompt> 设置您的提示
 
-You can use some bash PS1 tags in it.  
-The supported tags are:  
-* \u: your user name
-* \h, \H: devzat colored like your username
-* \t, \T: the time in your preferred formatting
-* \w: the current room
-* \W: the current room with #main aliased to ~
-* \S: a space character
-* \$: $ for normal users, # for admins
+你可以在其中使用一些 bash PS1 标签。
+支持的标签包括：
+* \u: 您的用户名
+* \h, \H: devzat 的颜色与您的用户名相似
+* \t, \T: 采用您首选格式的时间
+* \w:  当前房间
+* \W:  当前房间，#main 别名为 ~
+* \S: 空格字符
+* \$: $ 对于普通用户，# 对于管理员
 
-The default prompt is "\u:\S".`)
+默认提示符为 "\u:\S".`)
 		return
 	}
 
 	if cmd, ok := getCMD(rest); ok {
-		u.room.broadcast(Devbot, "Usage: "+cmd.name+" "+cmd.argsInfo+"  \n"+cmd.info)
+		u.room.broadcast(Devbot, "用法: "+cmd.name+" "+cmd.argsInfo+"  \n"+cmd.info)
 		return
 	}
 	// Plugin commands
 	if c, ok := PluginCMDs[rest]; ok {
-		u.room.broadcast(Devbot, "Usage: "+rest+" "+c.argsInfo+"  \n"+c.info)
+		u.room.broadcast(Devbot, "用法: "+rest+" "+c.argsInfo+"  \n"+c.info)
 		return
 	}
 
-	u.room.broadcast("", "This system has been minimized by removing packages and content that are not required on a system that users do not log into.\n\nTo restore this content, including manpages, you can run the 'unminimize' command. You will still need to ensure the 'man-db' package is installed.")
+	u.room.broadcast("", "通过删除用户不登录的系统上不需要的包和内容，该系统已最小化.\n\n要恢复这些内容，包括手册页，您可以运行 'unminimize' 命令。您仍然需要确保已安装 'man-db' 软件包.")
 }
 
 func lsCMD(rest string, u *User) {
@@ -847,7 +879,7 @@ func lsCMD(rest string, u *User) {
 		return
 	}
 	if rest != "" {
-		u.room.broadcast("", "ls: "+rest+" Permission denied")
+		u.room.broadcast("", "ls: "+rest+" 权限被拒绝")
 		return
 	}
 	roomList := ""
@@ -868,7 +900,7 @@ func commandsCMD(_ string, u *User) {
 
 func unameCMD(rest string, u *User) {
 	if unameCommit == "" || unameTime == "" {
-		u.room.broadcast("", "No uname output available. Build Devzat with `"+color.HiYellowString(`go build -ldflags "-X 'main.unameCommit=$(git rev-parse HEAD)' -X 'main.unameTime=$(date)'"`)+"` to enable.")
+		u.room.broadcast("", "没有可用的 uname 输出。构建 Devzat `"+color.HiYellowString(`go build -ldflags "-X 'main.unameCommit=$(git rev-parse HEAD)' -X 'main.unameTime=$(date)'"`)+"` to enable.")
 		return
 	}
 	u.room.broadcast("", "Devzat ("+unameCommit+") "+unameTime)

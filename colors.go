@@ -76,7 +76,7 @@ func init() {
 		return colors
 	}(), ", ") + `
 
-Make your own colors using hex (eg. color ` + colorNameWithColor("#A0FFFF") + ` or RGB values from 0-5 (eg. color ` + colorNameWithColor("530") + `). Generate gradients with hues (eg. color ` + colorNameWithColor("hue-0-360") + `). Set bg with "bg-" (eg. color ` + colorNameWithColor("bg-101") + `, color ` + colorNameWithColor("bg-hue-130-20") + `). Use multiple colors at once (eg. color ` + colorNameWithColor("rose #F5A9B8") + `). Remove bg with bg-off. There's also a few secret colors :)`
+使用十六进制制作自己的颜色 (eg. color ` + colorNameWithColor("#A0FFFF") + ` 或 RGB value 0-5(eg. color ` + colorNameWithColor("530") + `). 用色调生成渐变 (eg. color ` + colorNameWithColor("hue-0-360") + `). 设置背景色 "bg-" (eg. color ` + colorNameWithColor("bg-101") + `, color ` + colorNameWithColor("bg-hue-130-20") + `). 同时使用多种颜色 (eg. color ` + colorNameWithColor("rose #F5A9B8") + `). 移除 bg 与 bg-off. 还有一些秘密颜色 :)`
 }
 
 type Style struct {
@@ -325,7 +325,7 @@ func getCustomColor(name string) (*Style, error) {
 			g := (a / 10) % 10
 			b := a % 10
 			if r > 5 || g > 5 || b > 5 || r < 0 || g < 0 || b < 0 {
-				return nil, errors.New("custom colors have values from 0 to 5 smh")
+				return nil, errors.New("自定义颜色的值从 0 到 5 SMH")
 			}
 			if strings.HasPrefix(name, "bg-") {
 				return &Style{name, buildStyleNoStrip(bgAnsi256(uint8(r), uint8(g), uint8(b)))}, nil
@@ -380,7 +380,7 @@ func getStyle(name string) (*Style, error) {
 	if customColor != nil {
 		return customColor, nil
 	}
-	return nil, errors.New(`Which color? Choose from ` + colorNameWithColor("random") + `, ` + colorNameWithColor("bg-random") + `, ` + ColorHelpMsg)
+	return nil, errors.New(`哪种颜色？选择 ` + colorNameWithColor("random") + `, ` + colorNameWithColor("bg-random") + `, ` + ColorHelpMsg)
 }
 
 // Return the msg string with the same colors as the reference string

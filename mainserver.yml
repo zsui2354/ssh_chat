@@ -1,7 +1,7 @@
 # This is the config file for the main server.
 # It is not intended to be used as a default by self-hosted servers but can serve as a reference.
 
-port: 22
+port: 2221
 alt_port: 443
 profile_port: 5555
 scrollback: 16 # the number of messages from #main to keep in memory to give context when a user joins
@@ -10,26 +10,26 @@ key_file: devzat-sshkey
 integration_config: devzat-creds.yml # the file itself is not committed into the repo for obvious reasons
 censor: true # the internet is harsh...
 admins:
-  1eab2de20e41abed903ab2f22e7ff56dc059666dbe2ebbce07a8afeece8d0424: 'Shok: school'
-  7f0ee4cba8c8d886d654820c4ea09090dc12be00746b9a64b73faab3f83a85c6: 'B Smith: hackclub, github.com/Merlin04'
-  09db0042df8c48488e034cd03dfd30dc61a7db35cd7bb8964cd246b958adc1b9: 'Arcade Wise: hackclub, github.com/l3gacyb3ta'
-  12a9f108e7420460864de3d46610f722e69c80b2ac2fb1e2ada34aa952bbd73e: 'jmw: github.com/ciearius'
-  ee64c24b21b966a02f63fd663984836892ff804865baab923b1acf67e09afa50: 'Emma Trzupek: t0rchedf3rn (RHS)'
-  41fb7ecb8c216491cbe682f2a4c2964db6a9297f74ae48f0ec8bece1089ffec3: 'Leo, gh: GrandWasTaken, added cause idk'
-  f9bd8abcb5f3a943dd5c70eb7eca17e0c9ab1b2bb57cb144aba2120057a6cb4f: 'elitedino: github.com/elitedino'
-  00e821d2572f2988c72528b8c90c5b03b062b2c67d6531c5f902b6676d8db814: '@epic: diglet'
-  03b1b4bb01e0fcffdf2a7e5329d933ffc1f441545b4109331748d6ecb214a770: '@epic: kratos'
-  6540eb5e10199f7ad7010b042347794b94f4b73fd45584913a8c0955343a075c: '@epic: kraken-v3-regular'
-  c90cf5ea8a9bf831a9024ecfd9876a7116a2382653a9ce84a6d80b4dcfa2f979: 'cole: github.com/ColeDrain'
-  decafbad1c0de8dbc6b5d9df7c70668e4afe251f9886d75e93ebd7f28c131bda: 'Arkaeriit: github.com/Arkaeriit'
-  2c8c25ed743b3266068e8cb688cf998874875b3bedb2fa91c9a7d4904ac64483: 'Ara Narula: hackclub'
-  f5c7f9826b6e143f6e9c3920767680f503f259570f121138b2465bb2b052a85d: 'Ella Xu: hackclub'
-  f466ac6b6be43ba8efbac8406a34cf68f6843f2b79119a82726e4ad6e770ec7d: 'electronoob: electronoob.com'
-  ee11ee9258594dd7aac18f1fa43d5d32482ec063c86fc3386a058540b4ccbe26: 'Ishan Goel: quackduck'
-  3a3534a3d4727957a7e22c05d751d8921ef4a667973bd6d864a40c8ba39b9680: 'PPTide: github.com/PPTide'
-  120d352818aef5c2115b32d497253bffc67d26b09e65e8b63ee80f0acc8a8458: 'CaenJones: github.com/CaenJones'
-  d31bbe3dc058a935e29019e59d0c39d1a0a869db9042959198967c1c7b308e6e: 'CaenJones: (server) github.com/CaenJones'
-  dfc419ee8fc1a9ec4c608ead49113872ee42d85637faf4d542d72f64415a51e2: 'Alex S: hackclub, github.com/ajs256'
-  6acb2173bfe514c32d06639d5c3cac833e8e5a7af608c462cd737cd535bedc4f: 'Ry Hatton, Purdue, github.com/1ryh'
-  bed8118812b901da0f3768a2cfd3307ef8ce3597d8bb2095f33bcfcb90da27c7: 'Lukas Krapukaitis, Purdue'
-  ae8adc2ba18946eedf14fd6d6e614ae9fab8432893057340ddde2bace139ad9e: 'WhiteFlames'
+  9d7ecc0fd4ca4f92b44ea8c17212781e6cd941ea083762e8ff24db24f1dd8b4e: 'wangguodong: 频道主/SuperAdmin'
+  # 7f0ee4cba8c8d886d654820c4ea09090dc12be00746b9a64b73faab3f83a85c6: 'B Smith: hackclub, github.com/Merlin04'
+  # 09db0042df8c48488e034cd03dfd30dc61a7db35cd7bb8964cd246b958adc1b9: 'Arcade Wise: hackclub, github.com/l3gacyb3ta'
+  # 12a9f108e7420460864de3d46610f722e69c80b2ac2fb1e2ada34aa952bbd73e: 'jmw: github.com/ciearius'
+  # ee64c24b21b966a02f63fd663984836892ff804865baab923b1acf67e09afa50: 'Emma Trzupek: t0rchedf3rn (RHS)'
+  # 41fb7ecb8c216491cbe682f2a4c2964db6a9297f74ae48f0ec8bece1089ffec3: 'Leo, gh: GrandWasTaken, added cause idk'
+  # f9bd8abcb5f3a943dd5c70eb7eca17e0c9ab1b2bb57cb144aba2120057a6cb4f: 'elitedino: github.com/elitedino'
+  # 00e821d2572f2988c72528b8c90c5b03b062b2c67d6531c5f902b6676d8db814: '@epic: diglet'
+  # 03b1b4bb01e0fcffdf2a7e5329d933ffc1f441545b4109331748d6ecb214a770: '@epic: kratos'
+  # 6540eb5e10199f7ad7010b042347794b94f4b73fd45584913a8c0955343a075c: '@epic: kraken-v3-regular'
+  # c90cf5ea8a9bf831a9024ecfd9876a7116a2382653a9ce84a6d80b4dcfa2f979: 'cole: github.com/ColeDrain'
+  # decafbad1c0de8dbc6b5d9df7c70668e4afe251f9886d75e93ebd7f28c131bda: 'Arkaeriit: github.com/Arkaeriit'
+  # 2c8c25ed743b3266068e8cb688cf998874875b3bedb2fa91c9a7d4904ac64483: 'Ara Narula: hackclub'
+  # f5c7f9826b6e143f6e9c3920767680f503f259570f121138b2465bb2b052a85d: 'Ella Xu: hackclub'
+  # f466ac6b6be43ba8efbac8406a34cf68f6843f2b79119a82726e4ad6e770ec7d: 'electronoob: electronoob.com'
+  # ee11ee9258594dd7aac18f1fa43d5d32482ec063c86fc3386a058540b4ccbe26: 'Ishan Goel: quackduck'
+  # 3a3534a3d4727957a7e22c05d751d8921ef4a667973bd6d864a40c8ba39b9680: 'PPTide: github.com/PPTide'
+  # 120d352818aef5c2115b32d497253bffc67d26b09e65e8b63ee80f0acc8a8458: 'CaenJones: github.com/CaenJones'
+  # d31bbe3dc058a935e29019e59d0c39d1a0a869db9042959198967c1c7b308e6e: 'CaenJones: (server) github.com/CaenJones'
+  # dfc419ee8fc1a9ec4c608ead49113872ee42d85637faf4d542d72f64415a51e2: 'Alex S: hackclub, github.com/ajs256'
+  # 6acb2173bfe514c32d06639d5c3cac833e8e5a7af608c462cd737cd535bedc4f: 'Ry Hatton, Purdue, github.com/1ryh'
+  # bed8118812b901da0f3768a2cfd3307ef8ce3597d8bb2095f33bcfcb90da27c7: 'Lukas Krapukaitis, Purdue'
+  # ae8adc2ba18946eedf14fd6d6e614ae9fab8432893057340ddde2bace139ad9e: 'WhiteFlames'

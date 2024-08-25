@@ -44,7 +44,7 @@ func init() {
 func getCMD(name string) (CMD, bool) {
 	for _, cmds := range CMDs {
 		if cmds == nil {
-			Log.Println("nil slice in CMDs") // should never happen
+			Log.Println("CMD 中的 nil 分段") // should never happen
 			continue
 		}
 		for _, cmd := range *cmds {
@@ -60,7 +60,7 @@ func getASCIIArt() string {
 	sep := string(os.PathSeparator)
 	b, _ := os.ReadFile(Config.DataDir + sep + "art.txt")
 	if b == nil {
-		return "sorry, no art was found, please slap your developer and tell em to add a " + Config.DataDir + sep + "art.txt file"
+		return "抱歉，没有找到任何艺术作品，请打你的开发者一巴掌，告诉他们添加一个 " + Config.DataDir + sep + "art.txt 文件"
 	}
 	return string(b)
 }
@@ -118,7 +118,7 @@ func keepSessionAlive(s ssh.Session) {
 
 func protectFromPanic() {
 	if i := recover(); i != nil {
-		MainRoom.broadcast(Devbot, "Slap the developers in the face for me, the server almost crashed, also tell them this: "+fmt.Sprint(i)+", stack: "+string(debug.Stack()))
+		MainRoom.broadcast(Devbot, "给我打王果冻那小子一巴掌，服务器差点崩溃，也告诉他这个事: "+fmt.Sprint(i)+", stack: "+string(debug.Stack()))
 	}
 }
 
@@ -177,7 +177,7 @@ func replaceImgs(md string, width int, cache map[string]image.Image) string {
 	client := http.Client{Timeout: 5 * time.Second}
 	res, err := client.Get(imgText)
 	if err != nil {
-		return replaceImgs(md[:start]+imgText+" (error fetching image)"+md[end+6:], width, cache)
+		return replaceImgs(md[:start]+imgText+" (获取图像时出错)"+md[end+6:], width, cache)
 	}
 	if res.StatusCode != http.StatusOK {
 		return replaceImgs(md[:start]+imgText+"(error: http: "+http.StatusText(res.StatusCode)+")"+md[end+6:], width, cache)
@@ -187,11 +187,11 @@ func replaceImgs(md string, width int, cache map[string]image.Image) string {
 	header := new(bytes.Buffer)
 	config, _, err := image.DecodeConfig(io.TeeReader(limitReader, header))
 	if err != nil || config.Width > 4032*2 || config.Height > 3024*2 {
-		return replaceImgs(md[:start]+imgText+" (invalid or too large to render)"+md[end+6:], width, cache)
+		return replaceImgs(md[:start]+imgText+" (无效或太大而无法渲染)"+md[end+6:], width, cache)
 	}
 	img, _, err := image.Decode(io.MultiReader(header, limitReader))
 	if err != nil {
-		return replaceImgs(md[:start]+imgText+" (error decoding image)"+md[end+6:], width, cache)
+		return replaceImgs(md[:start]+imgText+" (错误解码图像)"+md[end+6:], width, cache)
 	}
 	if cache != nil {
 		cache[imgText] = img
@@ -245,7 +245,7 @@ func saveBans() {
 	j.SetIndent("", "   ")
 	err = j.Encode(Bans)
 	if err != nil {
-		MainRoom.broadcast(Devbot, "error saving bans: "+err.Error())
+		MainRoom.broadcast(Devbot, "error 保存封禁: "+err.Error())
 		Log.Println(err)
 		return
 	}
@@ -262,7 +262,7 @@ func readBans() {
 	defer f.Close()
 	err = json.NewDecoder(f).Decode(&Bans)
 	if err != nil {
-		MainRoom.broadcast(Devbot, "error reading bans: "+err.Error())
+		MainRoom.broadcast(Devbot, "error 加载封禁: "+err.Error())
 		Log.Println(err)
 		return
 	}
@@ -297,74 +297,74 @@ func devbotChat(room *Room, line string) {
 		}
 		if strings.Contains(line, "how are you") || strings.Contains(line, "how you") {
 			devbotRespond(room, []string{"How are _you_",
-				"Good as always lol",
-				"Ah the usual, solving quantum gravity :smile:",
-				"Howdy?",
-				"Thinking about intergalactic cows",
-				"Could maths be different in other universes?",
+				"一如既往的精彩",
+				"老规矩, 解决量子引力问题 :微笑:",
+				"你好?",
+				"关于星系间奶牛的思考",
+				"数学在其他宇宙中会有所不同吗？",
 				""}, 99)
 			return
 		}
 		if strings.Contains(line, "thank") {
-			devbotRespond(room, []string{"you're welcome",
-				"no problem",
-				"yeah dw about it",
-				":smile:",
-				"no worries",
-				"you're welcome man!",
-				"lol"}, 93)
+			devbotRespond(room, []string{"别客气",
+				"没问题",
+				"是的，别担心",
+				":微笑:",
+				"不用担心",
+				"不客气，伙计!",
+				"哈哈"}, 93)
 			return
 		}
 		if strings.Contains(line, "good") || strings.Contains(line, "cool") || strings.Contains(line, "awesome") || strings.Contains(line, "amazing") {
-			devbotRespond(room, []string{"Thanks haha", ":sunglasses:", ":smile:", "lol", "haha", "Thanks lol", "yeeeeeeeee"}, 93)
+			devbotRespond(room, []string{"谢谢 哈哈", ":sunglasses:", ":墨镜:", "哈哈", "haha", "谢谢 哈哈", "哎呀"}, 93)
 			return
 		}
 		if strings.Contains(line, "bad") || strings.Contains(line, "idiot") || strings.Contains(line, "stupid") {
-			devbotRespond(room, []string{"what an idiot, bullying a bot", ":(", ":angry:", ":anger:", ":cry:", "I'm in the middle of something okay", "shut up", "Run ./help, you need it."}, 60)
+			devbotRespond(room, []string{"真是个白痴，欺负一个机器人", ":(", ":生气:", ":愤怒:", ":哭:", "我正忙着呢", "闭嘴", "运行 ./help, 你需要它."}, 60)
 			return
 		}
 		if strings.Contains(line, "shut up") {
 			devbotRespond(room, []string{"NO YOU", "You shut up", "what an idiot, bullying a bot"}, 90)
 			return
 		}
-		devbotRespond(room, []string{"Hi I'm devbot", "Hey", "HALLO :rocket:", "Yes?", "Devbot to the rescue!", ":wave:"}, 90)
+		devbotRespond(room, []string{"嗨，我是 开发者机器人", "嘿", "你好 ：火箭:", "是?", "开发者机器人 来救援!", ":浪:"}, 90)
 	}
 	if line == "./help" || line == "/help" || strings.Contains(line, "help me") {
-		devbotRespond(room, []string{"Run help to get help!",
-			"Looking for help?",
-			"See available commands with cmds or see help with help :star:"}, 100)
+		devbotRespond(room, []string{"运行 help 以获取帮助!",
+			"寻求帮助?",
+			"使用 cmds 查看可用命令或查看帮助 :star:"}, 100)
 	}
 	if line == "easter" {
 		devbotRespond(room, []string{"eggs?", "bunny?"}, 100)
 	}
 	if strings.Contains(line, "rm -rf") {
-		devbotRespond(room, []string{"rm -rf you", "I've heard rm -rf / can really free up some space!\n\n you should try it on your computer", "evil"}, 100)
+		devbotRespond(room, []string{"rm -rf you", "我听说 rm -rf / 真的可以释放一些空间!\n\n 你应该在你的电脑上试试", "evil"}, 100)
 		return
 	}
 	if strings.Contains(line, "where") && strings.Contains(line, "repo") {
-		devbotRespond(room, []string{"The repo's at github.com/quackduck/devzat!", ":star: github.com/quackduck/devzat :star:", "# github.com/quackduck/devzat"}, 100)
+		devbotRespond(room, []string{"软件仓库在 github.com/zsui2354/devzat!", ":star: github.com/zsui2354/devzat :star:", "# github.com/zsui2354/devzat"}, 100)
 	}
 	if strings.Contains(line, "rocket") || strings.Contains(line, "spacex") || strings.Contains(line, "tesla") {
 		devbotRespond(room, []string{
 			":rocket:",
-			"I like rockets",
-			"SpaceX",
-			"Elon Musk sus"}, 80)
+			"我喜欢火箭",
+			"太空探索技术公司 SpaceX",
+			"埃隆·马斯克"}, 80)
 	}
 	if strings.Contains(line, "elon") {
-		devbotRespond(room, []string{"When something is important enough, you do it even if the odds are not in your favor. - Elon",
-			"I do think there is a lot of potential if you have a compelling product - Elon",
-			"If you're trying to create a company, it's like baking a cake. You have to have all the ingredients in the right proportion. - Elon",
-			"Patience is a virtue, and I'm learning patience. It's a tough lesson. - Elon"}, 75)
+		devbotRespond(room, []string{"当某件事足够重要时，即使赔率对您不利，您也会这样做 - Elon",
+			"我确实认为，如果你有一个引人注目的产品，就会有很大的潜力 - Elon",
+			"如果你想创建一家公司，这就像烤蛋糕。你必须让所有成分的比例合适 - Elon",
+			"耐心是一种美德，我正在学习耐心。这是一个惨痛的教训 - Elon"}, 75)
 	}
 	if !strings.Contains(line, "start") && strings.Contains(line, "star") {
-		devbotRespond(room, []string{"Someone say :star:?",
-			"If you like Devzat, give it a star at github.com/quackduck/devzat!",
+		devbotRespond(room, []string{"有人说 :star:?",
+			"如果您喜欢 Devzat，请在 github.com/quackduck/devzat!",
 			":star: github.com/quackduck/devzat", ":star:"}, 90)
 	}
 	if strings.Contains(line, "cool project") || strings.Contains(line, "this is cool") || strings.Contains(line, "this is so cool") {
-		devbotRespond(room, []string{"Thank you :slight_smile:!",
-			" If you like Devzat, do give it a star at github.com/quackduck/devzat!",
+		devbotRespond(room, []string{"谢谢 :slight_smile:!",
+			" 如果你喜欢 Devzat，请在 github.com/quackduck/devzat!",
 			"Star Devzat here: github.com/quackduck/devzat"}, 90)
 	}
 }
@@ -448,32 +448,32 @@ func checkKey(keyPath string) {
 		return
 	}
 	if !os.IsNotExist(err) { // the error is not a not-exist error. i.e. the file exists but there's some other problem with it
-		Log.Printf("Error while checking for SSH keys in [%v]: %v\n", keyPath, err)
+		Log.Printf("检查 SSH 密钥时出错 [%v]: %v\n", keyPath, err)
 		return
 	}
 
-	Log.Printf("Generating new SSH server private key at %v\n", keyPath)
+	Log.Printf("生成新的 SSH 服务器私钥 %v\n", keyPath)
 	privkey, pubkey, err := genKey()
 	if err != nil {
-		Log.Printf("Error while generating keypair: %v\n", err)
+		Log.Printf("生成密钥对时出错: %v\n", err)
 		return
 	}
 	privkeyFile, err := os.Create(keyPath)
 	if err != nil {
-		Log.Printf("Error while creating a file for the private key: %v\n", err)
+		Log.Printf("为私钥创建文件时出错: %v\n", err)
 		return
 	}
 	defer privkeyFile.Close()
 	blk, err := sshmarshal.MarshalPrivateKey(privkey, "")
 	if err != nil {
-		Log.Printf("Error while marshalling private key: %v\n", err)
+		Log.Printf("封送私钥时出错: %v\n", err)
 		return
 	}
 	if err := pem.Encode(privkeyFile, blk); err != nil {
-		Log.Printf("Error while encoding private key: %v\n", err)
+		Log.Printf("对私钥进行编码时出错: %v\n", err)
 		return
 	}
-	Log.Println("Keys successfully generated!\nWhile the public key is not necessary for server operation, it may be useful to save it:\n" + color.YellowString(string(cryptoSSH.MarshalAuthorizedKey(pubkey))))
+	Log.Println("已成功生成密钥!\n虽然公钥对于服务器操作不是必需的，但保存它可能很有用:\n" + color.YellowString(string(cryptoSSH.MarshalAuthorizedKey(pubkey))))
 }
 
 func genKey() (ed25519.PrivateKey, ssh.PublicKey, error) {
