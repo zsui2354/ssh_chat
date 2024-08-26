@@ -2,15 +2,15 @@
 # It is not intended to be used as a default by self-hosted servers but can serve as a reference.
 
 port: 2221
-alt_port: 443
+alt_port: 447
 profile_port: 5555
 scrollback: 16 # the number of messages from #main to keep in memory to give context when a user joins
 data_dir: devzat-data
 key_file: devzat-sshkey
 integration_config: devzat-creds.yml # the file itself is not committed into the repo for obvious reasons
-censor: true # the internet is harsh...
+censor: false # the internet is harsh...
 admins:
-  9d7ecc0fd4ca4f92b44ea8c17212781e6cd941ea083762e8ff24db24f1dd8b4e: 'wangguodong: 频道主/SuperAdmin'
+  #9d7ecc0fd4ca4f92b44ea8c17212781e6cd941ea083762e8ff24db24f1dd8b4e: 'wangguodong: 频道主SuperAdmin'
   # 7f0ee4cba8c8d886d654820c4ea09090dc12be00746b9a64b73faab3f83a85c6: 'B Smith: hackclub, github.com/Merlin04'
   # 09db0042df8c48488e034cd03dfd30dc61a7db35cd7bb8964cd246b958adc1b9: 'Arcade Wise: hackclub, github.com/l3gacyb3ta'
   # 12a9f108e7420460864de3d46610f722e69c80b2ac2fb1e2ada34aa952bbd73e: 'jmw: github.com/ciearius'

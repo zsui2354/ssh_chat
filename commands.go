@@ -650,24 +650,26 @@ func adminsCMD(_ string, u *User) {
 }
 
 func helpCMD(_ string, u *User) {
-	u.room.broadcast("", `欢迎来到 王果冻的聊天室! 聊天室通过 SSH 聊天： ssh apache.vyantaosheweining.top -p 2221
-因为所有平台上都有 SSH 应用程序，甚至在移动设备上，所以您可以从任何地方加入。
+	u.room.broadcast("", `
+————————————————————————————————————————————————————————————————————————————————————————————
+>>>  欢迎来到 王果冻的聊天室!    聊天室通过 SSH 聊天： ssh apache.vyantaosheweining.top -p 8080
+————————————————————————————————————————————————————————————————————————————————————————————
+  因为所有平台上都有 SSH 应用程序，甚至在移动设备上，所以您可以从任何地方加入。
 
-运行 cmds 查看命令列表.
+  运行 cmds 查看命令列表.
 
-有趣的功能:
-* 房间！运行 cd 查看所有房间，并使用 cd #foo 加入新房间.
-* Markdown语法支持! 表格、标题、斜体和所有内容。只需使用 \\n 代替换行符.
-* 代码语法突出显示。使用 Markdown 语法发送代码。运行 eg-code 查看示例.
-* 直接消息！使用 =user <msg> 快速发送 DM,或通过运行 cd @user 留在 DM 中。.
-* 时区支持，使用 tz Continent/City 设置您的时区.
-* 内置井字游戏和刽子手！运行 tic 或 hang <word> 开始新游戏.
-* 表情符号替换！\:rocket\: => :rocket: （就像在 Slack 和 Discord 上一样）
+  有趣的功能:
+  * 房间！运行 cd 查看所有房间，并使用 cd #foo 加入新房间.
+  * Markdown语法支持! 表格、标题、斜体和所有内容。只需使用 \\n 代替换行符.
+  * 代码语法突出显示。使用 Markdown 语法发送代码。运行 eg-code 查看示例.
+  * 直接消息！使用 =user <msg> 快速发送 DM,或通过运行 cd @user 留在 DM 中。.
+  * 时区支持，使用 tz Continent/City 设置您的时区.
+  * 内置井字游戏和刽子手！运行 tic 或 hang <word> 开始新游戏.								   
+  * 表情符号替换！\:rocket\: => :rocket: （就像在 Slack 和 Discord 上一样）				  
 
 在替换换行符时，也可使用 https\://bulkseotools.com/add-remove-line-breaks.php.
-
 加入项目Discord 服务器: https://discord.gg/yERQNTBbD5
-
+————————————————————————————————————————————————————————————————————————————————————————————
 命令：
    =<user>   <msg>           DM <user> 与 <msg>
    users                     列出用户
@@ -701,6 +703,7 @@ func helpCMD(_ string, u *User) {
    art                     展示一些熊猫艺术
    pwd                     显示当前房间
    shrug                   ¯\_(ツ)_/¯
+————————————————————————————————————————————————————————————————————————————————————————————
 `)
 }
 
